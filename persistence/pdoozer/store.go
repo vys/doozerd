@@ -11,7 +11,10 @@ type mutation struct {
 
 func Store() {
 	for m := range store {
-		_ = m // TODO(aram): use persistence to save it.
+		err := journal.WriteMutation(m)
+		if err != nil {
+			exit(err)
+		}
 		notify <- m
 	}
 }
