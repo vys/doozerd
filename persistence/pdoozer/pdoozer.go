@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	uri     = flag.String("a", "doozer:?ca=127.0.0.1:8046", "the address to bind to")
-	buri    = flag.String("b", "", "the DzNS uri")
-	journal = flag.String("j", "journal", "file to log mutations")
+	uri  = flag.String("a", "doozer:?ca=127.0.0.1:8046", "the address to bind to")
+	buri = flag.String("b", "", "the DzNS uri")
+	j    = flag.String("j", "journal", "file to log mutations")
+	v    = flag.Bool("v", false, "print each mutation on stdout")
 )
 
 func usage() {
