@@ -11,7 +11,7 @@ type mutation struct {
 
 func Store() {
 	for m := range store {
-		_ = m // TODO(aram): user persistence to save it.
+		_ = m // TODO(aram): use persistence to save it.
 		notify <- m
 	}
 }

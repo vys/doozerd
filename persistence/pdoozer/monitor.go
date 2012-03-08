@@ -32,14 +32,14 @@ func monitor() {
 			exit(err)
 		}
 		rev = ev.Rev + 1
-		
+
 		if pdPath.MatchString(ev.Path) {
 			continue
 		}
-		
+
 		mut := encode(ev)
 		fmt.Println(mut) // TODO(aram): check -v flag.
-		
+
 		store <- mutation{ev: ev, mut: mut}
 	}
 }

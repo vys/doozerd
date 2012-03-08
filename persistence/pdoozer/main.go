@@ -9,6 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/ha/doozer"
+	"github.com/ha/doozerd/persistence"
 	"os"
 )
 
@@ -20,10 +21,11 @@ var (
 )
 
 var (
-	conn   *doozer.Conn
-	id     = 0
-	store  = make(chan mutation)
-	notify = make(chan mutation)
+	conn    *doozer.Conn
+	id      = 0
+	store   = make(chan mutation)
+	notify  = make(chan mutation)
+	journal *persistence.Journal
 )
 
 func usage() {
@@ -52,8 +54,16 @@ func dial() {
 func main() {
 	flag.Usage = usage
 	flag.Parse()
+
+	var err error
+	journal, err = persistence.NewJournal(*j)
+	if err != nil {
+		exit(err)
+	}
+
 	dial()
 	go Store()
 	go Notify()
+	restore() // TODO(aram): make this optional.
 	monitor()
 }
