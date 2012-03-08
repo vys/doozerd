@@ -37,28 +37,23 @@ func errexit(err error) {
 	exit(err.Error())
 }
 
+func bail(err error) {
+	if err != nil {
+		errexit(err)
+	}
+}
+
 // connection to the cluster.
 var conn *doozer.Conn
+
+func dial() {
+	var err error
+	conn, err = doozer.DialUri(*uri, *buri)
+	bail(err)
+}
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-	if *uri == "" && *buri == "" {
-		errln("pdoozer: either -a or -b must be specified.")
-		usage()
-	}
-	if *journal == "" {
-		errln("pdoozer: must use -j to journal file.")
-		usage()
-	}
-
-	var err error
-	if *buri != "" {
-		exit("pdoozer: -b not implemented")
-	} else {
-		conn, err = doozer.Dial(*uri)
-		if err != nil {
-			errexit(err)
-		}
-	}
+	dial()
 }
