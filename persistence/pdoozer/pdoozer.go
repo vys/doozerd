@@ -47,4 +47,5 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 	dial()
+	monitor()
 }
