@@ -31,6 +31,10 @@ func monitor() {
 			exit(err)
 		}
 		rev = ev.Rev + 1
+		// BUG(aram): what are these, NOPs?
+		if ev.Flag == 0 {
+			continue
+		}
 
 		if exclude.MatchString(ev.Path) {
 			continue
@@ -39,6 +43,6 @@ func monitor() {
 		mut := encode(ev)
 		fmt.Println(mut) // TODO(aram): check -v flag.
 
-		store <- mutation{ev: ev, mut: mut}
+		store <- &mutation{ev: ev, mut: mut}
 	}
 }

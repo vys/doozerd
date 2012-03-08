@@ -11,7 +11,7 @@ type mutation struct {
 
 func Store() {
 	for m := range store {
-		err := journal.WriteMutation(m)
+		err := journal.WriteMutation(m.mut)
 		if err != nil {
 			exit(err)
 		}

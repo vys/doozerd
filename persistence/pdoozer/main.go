@@ -23,8 +23,8 @@ var (
 var (
 	conn    *doozer.Conn
 	id      = 0
-	store   = make(chan mutation)
-	notify  = make(chan mutation)
+	store   = make(chan *mutation)
+	notify  = make(chan *mutation)
 	journal *persistence.Journal
 )
 
@@ -62,8 +62,8 @@ func main() {
 	}
 
 	dial()
+	restore() // TODO(aram): make this optional.
 	go Store()
 	go Notify()
-	restore() // TODO(aram): make this optional.
 	monitor()
 }
