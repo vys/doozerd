@@ -5,5 +5,36 @@
 // tree signals the successful logging of the associated mutation to disk.
 package main
 
+import (
+	"flag"
+	"fmt"
+	"github.com/ha/doozer"
+	"os"
+)
+
+var (
+	uri  = flag.String("a", "", "the address to bind to")
+	buri = flag.String("b", "", "the DzNS uri")
+	journal = flag.String("j", "", "file to log mutations")
+)
+
+func usage() {
+	fmt.Fprintln(os.Stderr, "pdoozer: usage: pdoozer [options] -j journal")
+	flag.PrintDefaults()
+	os.Exit(1)
+}
+
+var conn *doozer.Conn
+
 func main() {
+	flag.Usage = usage
+	flag.Parse()
+	if *uri == "" && *buri == "" {
+		fmt.Fprintln(os.Stderr, "pdoozer: either -a or -b must be specified.")
+		usage()
+	}
+	if *journal == "" {
+		fmt.Fprintln(os.Stderr, "pdoozer: must use -j to journal file.")
+		usage()
+	}
 }
