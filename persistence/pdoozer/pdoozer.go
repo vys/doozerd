@@ -13,13 +13,13 @@ import (
 )
 
 var (
-	uri     = flag.String("a", "", "the address to bind to")
+	uri     = flag.String("a", "doozer:?ca=127.0.0.1:8046", "the address to bind to")
 	buri    = flag.String("b", "", "the DzNS uri")
-	journal = flag.String("j", "", "file to log mutations")
+	journal = flag.String("j", "journal", "file to log mutations")
 )
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "pdoozer: usage: pdoozer [options] -j journal")
+	errln("usage: pdoozer [options]")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
