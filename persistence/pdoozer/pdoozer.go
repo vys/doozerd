@@ -24,17 +24,40 @@ func usage() {
 	os.Exit(1)
 }
 
+func errln(err string) {
+	fmt.Fprintln(os.Stderr, "pdoozer: " + err)
+}
+
+func exit(err string) {
+	errln(err)
+	os.Exit(2)
+}
+
+func errexit(err error) {
+	exit(err.Error())
+}
+
 var conn *doozer.Conn
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
 	if *uri == "" && *buri == "" {
-		fmt.Fprintln(os.Stderr, "pdoozer: either -a or -b must be specified.")
+		errln("pdoozer: either -a or -b must be specified.")
 		usage()
 	}
 	if *journal == "" {
-		fmt.Fprintln(os.Stderr, "pdoozer: must use -j to journal file.")
+		errln("pdoozer: must use -j to journal file.")
 		usage()
+	}
+	
+	var err error
+	if *buri != "" {
+		exit("pdoozer: -b not implemented")
+	} else {
+		conn, err = doozer.Dial(*uri)
+		if err != nil {
+			errexit(err)
+		}
 	}
 }
