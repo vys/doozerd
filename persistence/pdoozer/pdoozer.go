@@ -17,6 +17,7 @@ var (
 	buri = flag.String("b", "", "the DzNS uri")
 	j    = flag.String("j", "journal", "file to log mutations")
 	v    = flag.Bool("v", false, "print each mutation on stdout")
+	conn *doozer.Conn
 )
 
 func usage() {
@@ -29,28 +30,17 @@ func errln(err string) {
 	fmt.Fprintln(os.Stderr, "pdoozer: "+err)
 }
 
-func exit(err string) {
-	errln(err)
+func exit(err error) {
+	errln(err.Error())
 	os.Exit(2)
 }
-
-func errexit(err error) {
-	exit(err.Error())
-}
-
-func bail(err error) {
-	if err != nil {
-		errexit(err)
-	}
-}
-
-// connection to the cluster.
-var conn *doozer.Conn
 
 func dial() {
 	var err error
 	conn, err = doozer.DialUri(*uri, *buri)
-	bail(err)
+	if err != nil {
+		exit(err)
+	}
 }
 
 func main() {
