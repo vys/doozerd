@@ -17,7 +17,13 @@ var (
 	buri = flag.String("b", "", "the DzNS uri")
 	j    = flag.String("j", "journal", "file to log mutations")
 	v    = flag.Bool("v", false, "print each mutation on stdout")
-	conn *doozer.Conn
+)
+
+var (
+	conn   *doozer.Conn
+	id     = 0
+	store  = make(chan mutation)
+	notify = make(chan mutation)
 )
 
 func usage() {
@@ -47,5 +53,7 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 	dial()
+	go Store()
+	go Notify()
 	monitor()
 }
