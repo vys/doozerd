@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	uri  = flag.String("a", "", "the address to bind to")
-	buri = flag.String("b", "", "the DzNS uri")
+	uri     = flag.String("a", "", "the address to bind to")
+	buri    = flag.String("b", "", "the DzNS uri")
 	journal = flag.String("j", "", "file to log mutations")
 )
 
@@ -25,7 +25,7 @@ func usage() {
 }
 
 func errln(err string) {
-	fmt.Fprintln(os.Stderr, "pdoozer: " + err)
+	fmt.Fprintln(os.Stderr, "pdoozer: "+err)
 }
 
 func exit(err string) {
@@ -37,6 +37,7 @@ func errexit(err error) {
 	exit(err.Error())
 }
 
+// connection to the cluster.
 var conn *doozer.Conn
 
 func main() {
@@ -50,7 +51,7 @@ func main() {
 		errln("pdoozer: must use -j to journal file.")
 		usage()
 	}
-	
+
 	var err error
 	if *buri != "" {
 		exit("pdoozer: -b not implemented")
