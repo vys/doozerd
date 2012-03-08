@@ -7,8 +7,7 @@ import (
 	"regexp"
 )
 
-// TODO(aram): change this to '^/ctl'.
-var pdPath = regexp.MustCompile("^/ctl/persistence")
+var exclude = regexp.MustCompile("^/ctl")
 
 func encode(ev doozer.Event) (mut string) {
 	switch {
@@ -33,7 +32,7 @@ func monitor() {
 		}
 		rev = ev.Rev + 1
 
-		if pdPath.MatchString(ev.Path) {
+		if exclude.MatchString(ev.Path) {
 			continue
 		}
 
