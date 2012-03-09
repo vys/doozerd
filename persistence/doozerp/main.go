@@ -11,6 +11,7 @@ import (
 	"github.com/ha/doozer"
 	"github.com/ha/doozerd/persistence"
 	"os"
+	"strconv"
 )
 
 var (
@@ -51,10 +52,18 @@ func dial() {
 	if err != nil {
 		exit(err)
 	}
-	getid()
+	setid()
 }
 
-func getid() {
+func setid() {
+	body, rev, err := conn.Get("/ctl/persistence/id", nil)
+	id, _ = strconv.Atoi(string(body))
+	id++
+	body = []byte(fmt.Sprint(id))
+	_, err = conn.Set("/ctl/persistence/id", rev, body)
+	if err != nil {
+		exit(err)
+	}
 }
 
 func main() {
