@@ -3,8 +3,7 @@
 // writes mutations to pesistent medium.  To signal its users, doozerp
 // maintainsa clone of the namespae in /ctl/persistence/<n>/.  A mutation
 // in the mirroredtree signals the succesful logging of the associated
-mutation to disk.
-
+// mutation to disk.
 package main
 
 import (
