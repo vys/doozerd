@@ -7,8 +7,10 @@ import (
 	"regexp"
 )
 
-var exclude = regexp.MustCompile("^/ctl")
+var exclude = regexp.MustCompile("^/ctl") // private doozer stuff.
 
+// encode takes the binary representation of an operation
+// and returns the human readable form.
 func encode(ev doozer.Event) (mut string) {
 	switch {
 	case ev.IsSet():
@@ -19,6 +21,8 @@ func encode(ev doozer.Event) (mut string) {
 	return
 }
 
+// monitor listens for new doozer events and sends those
+// events to be saved by Store.
 func monitor() {
 	var (
 		ev  doozer.Event
@@ -49,6 +53,8 @@ func monitor() {
 	}
 }
 
+// Notify acknowledges mutations by mirroring the affected
+// namespace into /ctl/persistence/<id>.
 func Notify() {
 	prefix := "/ctl/persistence/" + fmt.Sprint(id)
 

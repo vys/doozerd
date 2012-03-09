@@ -24,11 +24,11 @@ var (
 )
 
 var (
-	conn    *doozer.Conn
-	id      = 0
-	journal *persistence.Journal
-	notify  = make(chan *mutation)
-	store   = make(chan *mutation)
+	conn    *doozer.Conn           // connection to the cluster.
+	id      = 0                    // client id.
+	journal *persistence.Journal   // journal to log to.
+	notify  = make(chan *mutation) // ack. write operation.
+	store   = make(chan *mutation) // save to disk.
 )
 
 func usage() {
@@ -46,6 +46,7 @@ func exit(err error) {
 	os.Exit(2)
 }
 
+// dial connects to the server.
 func dial() {
 	var err error
 	conn, err = doozer.DialUri(*uri, *buri)
@@ -55,6 +56,7 @@ func dial() {
 	setid()
 }
 
+// setid determines and sets the client id.
 func setid() {
 	body, rev, err := conn.Get("/ctl/persistence/id", nil)
 	id, _ = strconv.Atoi(string(body))
