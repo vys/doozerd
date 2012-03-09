@@ -41,7 +41,9 @@ func monitor() {
 		}
 
 		mut := encode(ev)
-		fmt.Println(mut) // TODO(aram): check -v flag.
+		if *v {
+			fmt.Println(mut)
+		}
 
 		store <- &mutation{ev: ev, mut: mut}
 	}
