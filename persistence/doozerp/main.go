@@ -24,9 +24,9 @@ var (
 var (
 	conn    *doozer.Conn
 	id      = 0
-	store   = make(chan *mutation)
-	notify  = make(chan *mutation)
 	journal *persistence.Journal
+	notify  = make(chan *mutation)
+	store   = make(chan *mutation)
 )
 
 func usage() {
