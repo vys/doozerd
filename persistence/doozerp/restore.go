@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// from doozer/event.go.
 const (
 	_ = 1 << iota
 	_
@@ -23,12 +24,26 @@ func restore() {
 		if err == io.EOF {
 			return
 		} else if err != nil {
-			exit(err)
+			badJournal(errors.New("bad journal file: " + err.Error()))
+			continue
 		}
 		err = apply(m)
 		if err != nil {
 			exit(err)
 		}
+	}
+}
+
+func badJournal(err error) {
+	if *f {
+		errln(err.Error())
+		err = journal.Fsck()
+		if err != nil {
+			exit(errors.New("can't fix journal"))
+		}
+		errln("journal successfully fixed")
+	} else {
+		exit(err)
 	}
 }
 
@@ -51,7 +66,7 @@ func apply(mut string) error {
 }
 
 // decode decodes a mutation into an equivalent doozer.Event,
-// from store/store.go:/decode.
+// from ../../store/store.go:/decode.
 func decode(mut string) (ev doozer.Event, err error) {
 	cm := strings.SplitN(mut, ":", 2)
 

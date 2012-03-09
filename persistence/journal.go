@@ -61,11 +61,27 @@ func (j Journal) Close() {
 	j.rw.Close()
 }
 
+// Fsck truncates the journal at the last read mutation.  It removes
+// data, so use with care.
+func (j Journal) Fsck() error {
+	j.mutex.Lock()
+	defer j.mutex.Unlock()
+	offset, _ := j.rw.Seek(0, 1)
+	return j.rw.Truncate(offset)
+}
+
 // readMutation reads a block from the reader, decodes it into a
 // mutation and returns it along with an error.
-func readMutation(r io.Reader) (mut string, err error) {
+func readMutation(r io.ReadSeeker) (mut string, err error) {
 	b := block{}
 
+	offset, _ := r.Seek(0, 1) // remember where we are.
+	defer func() {
+		if err != nil {
+			// rewind so we can truncate at the last good mutation.
+			r.Seek(offset, 0)
+		} 
+	}()
 	// Read the header so we know how much to read next.
 	err = binary.Read(r, binary.LittleEndian, &b.Hdr)
 	if err != nil {
