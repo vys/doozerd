@@ -1,8 +1,8 @@
-// pdoozer is a persistence client for doozerd.  It is implemented as a
-// usual doozer client that connects to a cluster, monitors I/O and writes
-// mutations to persistent medium.  To signal its users, pdoozerd maintains
-// a clone of the namespace in /ctl/pdoozer/<n>/.  A mutation in the mirrored
-// tree signals the successful logging of the associated mutation to disk.
+// doozerp is a persistence client for doozerd.  It is implemented as ausual
+// doozer client that connects to a cluster, monitors I/O and writesmutations
+// to pesistent medium.  To signal its users, doozerp maintainsa clone of
+// the namespae in /ctl/persistence/<n>/.  A mutation in the mirroredtree
+// signals the succesful logging of the associated mutation to disk.
 package main
 
 import (
@@ -30,13 +30,13 @@ var (
 )
 
 func usage() {
-	errln("usage: pdoozer [options]")
+	errln("usage: doozerp [options]")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
 
 func errln(err string) {
-	fmt.Fprintln(os.Stderr, "pdoozer: "+err)
+	fmt.Fprintln(os.Stderr, "doozerp: "+err)
 }
 
 func exit(err error) {
