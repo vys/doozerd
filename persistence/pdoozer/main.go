@@ -14,9 +14,10 @@ import (
 )
 
 var (
-	uri  = flag.String("a", "doozer:?ca=127.0.0.1:8046", "the address to bind to")
 	buri = flag.String("b", "", "the DzNS uri")
 	j    = flag.String("j", "journal", "file to log mutations")
+	r    = flag.Bool("r", false, "restore from file")
+	uri  = flag.String("a", "doozer:?ca=127.0.0.1:8046", "the address to bind to")
 	v    = flag.Bool("v", false, "print each mutation on stdout")
 )
 
@@ -62,7 +63,9 @@ func main() {
 	}
 
 	dial()
-	restore() // TODO(aram): make this optional.
+	if *r {
+		restore()
+	}
 	go Store()
 	go Notify()
 	monitor()
