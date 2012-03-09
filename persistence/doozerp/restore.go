@@ -18,6 +18,7 @@ const (
 
 var ErrBadMutation = errors.New("bad mutation")
 
+// restore applies the stored mutations into doozer.
 func restore() {
 	for {
 		m, err := journal.ReadMutation()
@@ -34,6 +35,7 @@ func restore() {
 	}
 }
 
+// badJournal deals with a broken journal.
 func badJournal(err error) {
 	if *f {
 		errln(err.Error())
@@ -47,6 +49,7 @@ func badJournal(err error) {
 	}
 }
 
+// apply applies a single mutation recovered from the journal.
 func apply(mut string) error {
 	ev, err := decode(mut)
 	if err != nil {
