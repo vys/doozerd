@@ -1,8 +1,10 @@
-// doozerp is a persistence client for doozerd.  It is implemented as ausual
-// doozer client that connects to a cluster, monitors I/O and writesmutations
-// to pesistent medium.  To signal its users, doozerp maintainsa clone of
-// the namespae in /ctl/persistence/<n>/.  A mutation in the mirroredtree
-// signals the succesful logging of the associated mutation to disk.
+// doozerp is a persistence client for doozerd.  It is implemented as
+// a regular doozer client that connects to a cluster, monitors I/O and
+// writes mutations to pesistent medium.  To signal its users, doozerp
+// maintainsa clone of the namespae in /ctl/persistence/<n>/.  A mutation
+// in the mirroredtree signals the succesful logging of the associated
+mutation to disk.
+
 package main
 
 import (
