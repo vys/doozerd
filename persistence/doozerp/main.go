@@ -2,7 +2,7 @@
 // a regular doozer client that connects to a cluster, monitors I/O and
 // writes mutations to pesistent medium.  To signal its users, doozerp
 // maintains a clone of the namespace in /ctl/persistence/<n>/.  A mutation
-// in the mirroredtree signals the succesful logging of the associated
+// in the mirrored tree signals the succesful logging of the associated
 // mutation to disk.
 package main
 
