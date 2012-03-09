@@ -51,6 +51,10 @@ func dial() {
 	if err != nil {
 		exit(err)
 	}
+	getid()
+}
+
+func getid() {
 }
 
 func main() {
