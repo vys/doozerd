@@ -6,34 +6,54 @@ import (
 	"github.com/ha/doozerd/persistence"
 	"io"
 	"os"
+	"path"
+)
+
+var (
+	f        = flag.Bool("f", false, "try to fix a broken journal")
+	progname = path.Base(os.Args[0])
 )
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: dumpjournal file")
+	errln("usage: " + progname + " [options] journal")
+	flag.PrintDefaults()
 	os.Exit(1)
+}
+
+func errln(s string) {
+	fmt.Fprintln(os.Stderr, progname+": "+s)
 }
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-
-	args := flag.Args()
-	if len(args) != 1 {
+	if flag.NArg() != 1 {
 		usage()
 	}
-	file := args[0]
+
+	file := flag.Arg(0)
 	j, err := persistence.NewJournal(file)
 	if err != nil {
 		panic(err)
 	}
 	for {
 		m, err := j.ReadMutation()
-		if err == io.EOF || err == io.ErrUnexpectedEOF {
+		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return
+			errln("bad journal file: " + err.Error())
+			if *f {
+				err = j.Fsck()
+				if err != nil {
+					errln("can't fix journal")
+					os.Exit(1)
+				}
+				errln("journal successfully fixed")
+				continue
+			} else {
+				return
+			}
 		}
 		fmt.Println(m)
 	}

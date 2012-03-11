@@ -17,7 +17,7 @@ import (
 
 var (
 	buri = flag.String("b", "", "the DzNS uri")
-	f    = flag.Bool("f", false, "try fix a broken journal.")
+	f    = flag.Bool("f", false, "try to fix a broken journal")
 	j    = flag.String("j", "journal", "file to log mutations")
 	r    = flag.Bool("r", false, "restore from file")
 	uri  = flag.String("a", "doozer:?ca=127.0.0.1:8046", "the address to bind to")
