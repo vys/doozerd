@@ -164,6 +164,7 @@ func TestRestore(t *testing.T) {
 	}
 	j := f.Name()
 	f.Close()
+	defer os.Remove(j)
 
 	journal, err := persistence.NewJournal(j)
 	if err != nil {
