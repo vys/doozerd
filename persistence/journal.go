@@ -80,7 +80,7 @@ func readMutation(r io.ReadSeeker) (mut string, err error) {
 		if err != nil {
 			// rewind so we can truncate at the last good mutation.
 			r.Seek(offset, 0)
-		} 
+		}
 	}()
 	// Read the header so we know how much to read next.
 	err = binary.Read(r, binary.LittleEndian, &b.Hdr)

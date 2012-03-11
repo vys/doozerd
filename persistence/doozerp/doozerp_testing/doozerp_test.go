@@ -3,8 +3,10 @@ package doozerp_testing
 
 import (
 	"errors"
+	"fmt"
 	"github.com/ha/doozer"
 	"github.com/ha/doozerd/persistence"
+	"github.com/ha/doozerd/store"
 	"io"
 	"io/ioutil"
 	"os"
@@ -46,7 +48,6 @@ func decode(mut string) (k int, v string, err error) {
 	return
 }
 
-
 type Cluster struct {
 	conn          *doozer.Conn
 	doozerd       *exec.Cmd
@@ -86,8 +87,11 @@ func NewCluster(t *testing.T, doozerpArgs ...string) (c *Cluster) {
 	}
 	c.j = f.Name()
 	f.Close()
-	args := append(doozerpArgs, "-a=doozer:?ca=127.0.0.1:19999")
-	args = append(args, "-j="+c.j)
+	args := []string{
+		"-a=doozer:?ca=127.0.0.1:19999",
+		"-j=" + c.j,
+	}
+	args = append(args, doozerpArgs...)
 	c.doozerp = exec.Command("doozerp", args...)
 	err = c.doozerp.Start()
 	if err != nil {
@@ -153,6 +157,39 @@ func TestNotify(t *testing.T) {
 	notified = true
 }
 
+func TestRestore(t *testing.T) {
+	f, err := ioutil.TempFile("", "j")
+	if err != nil {
+		t.Fatal(err)
+	}
+	j := f.Name()
+	f.Close()
+
+	journal, err := persistence.NewJournal(j)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for k, v := range testData {
+		m := store.MustEncodeSet("/ken/"+strconv.Itoa(k), v, int64(k))
+		journal.WriteMutation(m)
+	}
+	journal.Close()
+
+	c := NewCluster(t, fmt.Sprintf("-j=%s", j), "-r")
+	defer c.Close()
+	for k, v := range testData {
+		v1, _, err := c.conn.Get("/ken/"+strconv.Itoa(k), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		v2 := string(v1)
+		if v != v2 {
+			t.Fatalf("restored data is not what is expected: %s != %s", v, v2)
+		}
+	}
+}
+
 func TestSave(t *testing.T) {
 	c := NewCluster(t)
 	defer c.Close()
@@ -160,7 +197,6 @@ func TestSave(t *testing.T) {
 	for k, v := range testData {
 		c.conn.Set("/ken/"+strconv.Itoa(k), -1, []byte(v))
 	}
-	time.Sleep(1000 * time.Millisecond) // TODO(aram): check notify.
 	for k, _ := range testData {
 		_, err := c.conn.Wait("/ctl/persistence/1/ken/"+strconv.Itoa(k), -1)
 		if err != nil {
@@ -168,10 +204,10 @@ func TestSave(t *testing.T) {
 		}
 	}
 	j, err := persistence.NewJournal(c.j)
-	defer j.Close()
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer j.Close()
 	for k, v := range testData {
 		m, err := j.ReadMutation()
 		if err != nil {
