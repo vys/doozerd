@@ -27,11 +27,11 @@ func NewCluster(t *testing.T, doozerpArgs ...string) (c *Cluster) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	time.Sleep(100 * time.Millisecond)
 	go func() {
 		c.doozerd.Wait()
 		c.doozerdIsDead = true
 	}()
+	time.Sleep(100 * time.Millisecond)
 	if c.doozerdIsDead {
 		t.Fatal(errors.New("doozerd died prematurely"))
 	}
@@ -59,11 +59,11 @@ func NewCluster(t *testing.T, doozerpArgs ...string) (c *Cluster) {
 		c.doozerd.Process.Kill()
 		t.Fatal(err)
 	}
-	time.Sleep(100 * time.Millisecond)
 	go func() {
 		c.doozerp.Wait()
 		c.doozerpIsDead = true
 	}()
+	time.Sleep(100 * time.Millisecond)
 	if c.doozerpIsDead {
 		t.Fatal(errors.New("doozerp died prematurely"))
 	}
@@ -81,6 +81,6 @@ func (c *Cluster) Close() {
 }
 
 func TestNewCluster(t *testing.T) {
-	c := NewCluster(t, "")
+	c := NewCluster(t)
 	defer c.Close()
 }
