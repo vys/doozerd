@@ -8,23 +8,29 @@ import (
 	"os"
 )
 
+var progname = path.Base(os.Args[0])
+
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: writejournal file")
+	errln("usage: " + progname + " journal")
 	os.Exit(1)
+}
+
+func errln(s string) {
+	fmt.Fprintln(os.Stderr, progname+": "+s)
 }
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-
-	args := flag.Args()
-	if len(args) != 1 {
+	if flag.NArg() != 1 {
 		usage()
 	}
-	file := args[0]
+
+	file := flag.Arg(0)
 	j, err := persistence.NewJournal(file)
 	if err != nil {
-		panic(err)
+		errln(err)
+		os.Exit(2)
 	}
 	r := bufio.NewReader(os.Stdin)
 	for {
@@ -42,7 +48,8 @@ func main() {
 		}
 		err = j.WriteMutation(string(line))
 		if err != nil {
-			panic(err)
+			errln(err)
+			os.Exit(4)
 		}
 	}
 }

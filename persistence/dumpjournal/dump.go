@@ -47,7 +47,7 @@ func main() {
 				err = j.Fsck()
 				if err != nil {
 					errln("can't fix journal")
-					os.Exit(1)
+					os.Exit(2)
 				}
 				errln("journal successfully fixed")
 				continue
