@@ -12,71 +12,73 @@ import (
 )
 
 type Cluster struct {
-	conn    *doozer.Conn
-	doozerd *exec.Cmd
-	doozerp *exec.Cmd
-	j       string
+	conn          *doozer.Conn
+	doozerd       *exec.Cmd
+	doozerp       *exec.Cmd
+	j             string
+	doozerdIsDead bool
+	doozerpIsDead bool
 }
 
-func NewCluster(t *testing.T, doozerpArgs ...string) *Cluster {
-	doozerd := exec.Command("doozerd", "-l=127.0.0.1:19999", "-w=false")
-	err := doozerd.Start()
+func NewCluster(t *testing.T, doozerpArgs ...string) (c *Cluster) {
+	c = new(Cluster)
+	c.doozerd = exec.Command("doozerd", "-l=127.0.0.1:19999", "-w=false")
+	err := c.doozerd.Start()
 	if err != nil {
 		t.Fatal(err)
 	}
 	time.Sleep(100 * time.Millisecond)
-	var doozerdIsDead bool
 	go func() {
-		doozerd.Wait()
-		doozerdIsDead = true
+		c.doozerd.Wait()
+		c.doozerdIsDead = true
 	}()
-	if doozerdIsDead {
+	if c.doozerdIsDead {
 		t.Fatal(errors.New("doozerd died prematurely"))
 	}
-	
-	conn, err := doozer.DialUri("doozer:?ca=127.0.0.1:19999", "")
+
+	c.conn, err = doozer.DialUri("doozer:?ca=127.0.0.1:19999", "")
 	if err != nil {
-		doozerd.Process.Kill()
+		c.doozerd.Process.Kill()
 		t.Fatal(err)
 	}
-	
+
 	f, err := ioutil.TempFile("", "j")
 	if err != nil {
-		conn.Close()
-		doozerd.Process.Kill()
+		c.conn.Close()
+		c.doozerd.Process.Kill()
 		t.Fatal(err)
 	}
-	j := f.Name()
+	c.j = f.Name()
 	f.Close()
 	args := append(doozerpArgs, "-a=doozer:?ca=127.0.0.1:19999")
-	args = append(args, "-j="+j)
-	doozerp := exec.Command("doozerp", args...)
-	err = doozerp.Start()
+	args = append(args, "-j="+c.j)
+	c.doozerp = exec.Command("doozerp", args...)
+	err = c.doozerp.Start()
 	if err != nil {
-		conn.Close()
-		doozerd.Process.Kill()
+		c.conn.Close()
+		c.doozerd.Process.Kill()
 		t.Fatal(err)
 	}
 	time.Sleep(100 * time.Millisecond)
-	var doozerpIsDead bool
 	go func() {
-		doozerp.Wait()
-		doozerpIsDead = true
+		c.doozerp.Wait()
+		c.doozerpIsDead = true
 	}()
-	if doozerpIsDead {
+	if c.doozerpIsDead {
 		t.Fatal(errors.New("doozerp died prematurely"))
 	}
-	
-	return &Cluster{conn: conn, doozerd: doozerd, doozerp: doozerp, j: j}
+
+	return
 }
 
 func (c *Cluster) Close() {
 	c.conn.Close()
 	c.doozerd.Process.Kill()
-	c.doozerp.Wait()
+	if !c.doozerpIsDead {
+		c.doozerp.Wait()
+	}
 	os.Remove(c.j)
 }
-
 
 func TestNewCluster(t *testing.T) {
 	c := NewCluster(t, "")
