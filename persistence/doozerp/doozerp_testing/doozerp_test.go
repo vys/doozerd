@@ -121,6 +121,38 @@ func TestNewCluster(t *testing.T) {
 	defer c.Close()
 }
 
+func TestNotify(t *testing.T) {
+	c := NewCluster(t)
+	defer c.Close()
+
+	for k, v := range testData {
+		c.conn.Set("/ken/"+strconv.Itoa(k), -1, []byte(v))
+	}
+	var notified bool
+	go func() {
+		time.Sleep(5000 * time.Millisecond)
+		if !notified {
+			t.Fatal("no save notification")
+		}
+	}()
+	time.Sleep(10 * time.Millisecond)
+	for k, _ := range testData {
+		ev, err := c.conn.Wait("/ctl/persistence/1/ken/"+strconv.Itoa(k), -1)
+		if err != nil {
+			t.Fatal(err)
+		}
+		v, _, err := c.conn.Get("/ctl/persistence/1/ken/"+strconv.Itoa(k), &ev.Rev)
+		rev, err := strconv.Atoi(string(v))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if int64(rev) > ev.Rev {
+			t.Fatalf("wrong notification: %d != %d", rev, ev.Rev)
+		}
+	}
+	notified = true
+}
+
 func TestSave(t *testing.T) {
 	c := NewCluster(t)
 	defer c.Close()
@@ -129,6 +161,12 @@ func TestSave(t *testing.T) {
 		c.conn.Set("/ken/"+strconv.Itoa(k), -1, []byte(v))
 	}
 	time.Sleep(1000 * time.Millisecond) // TODO(aram): check notify.
+	for k, _ := range testData {
+		_, err := c.conn.Wait("/ctl/persistence/1/ken/"+strconv.Itoa(k), -1)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
 	j, err := persistence.NewJournal(c.j)
 	defer j.Close()
 	if err != nil {
