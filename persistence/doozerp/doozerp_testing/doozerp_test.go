@@ -1,11 +1,11 @@
-// Package doozerp_testing tests the doozerp command.
+// Package doozerp_testing tests the doozerp command and the doozerl library.
 package doozerp_testing
 
 import (
 	"errors"
 	"fmt"
-	"github.com/ha/doozer"
 	"github.com/ha/doozerd/persistence"
+	"github.com/ha/doozerd/persistence/doozerl"
 	"github.com/ha/doozerd/store"
 	"io"
 	"io/ioutil"
@@ -49,7 +49,7 @@ func decode(mut string) (k int, v string, err error) {
 }
 
 type Cluster struct {
-	conn          *doozer.Conn
+	conn          *doozerl.Conn
 	doozerd       *exec.Cmd
 	doozerp       *exec.Cmd
 	j             string
@@ -73,7 +73,7 @@ func NewCluster(t *testing.T, doozerpArgs ...string) (c *Cluster) {
 		t.Fatal("doozerd died prematurely")
 	}
 
-	c.conn, err = doozer.DialUri("doozer:?ca=127.0.0.1:19999", "")
+	c.conn, err = doozerl.DialUri("doozer:?ca=127.0.0.1:19999", "")
 	if err != nil {
 		c.doozerd.Process.Kill()
 		t.Fatal(err)
@@ -244,12 +244,6 @@ func TestSave(t *testing.T) {
 
 	for k, v := range testData {
 		c.conn.Set("/ken/"+strconv.Itoa(k), -1, []byte(v))
-	}
-	for k, _ := range testData {
-		_, err := c.conn.Wait("/ctl/persistence/1/ken/"+strconv.Itoa(k), -1)
-		if err != nil {
-			t.Fatal(err)
-		}
 	}
 	j, err := persistence.NewJournal(c.j)
 	if err != nil {

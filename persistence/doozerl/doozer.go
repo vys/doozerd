@@ -1,6 +1,6 @@
 // package doozer provides a github.com/ha/doozer compatible API to
 // interract with persitence clients.
-package doozer
+package doozerl
 
 import (
 	"github.com/ha/doozer"
@@ -28,7 +28,7 @@ func (c *Conn) Set(path string, oldRev int64, body []byte) (rev int64, err error
 	}
 
 	var ev doozer.Event
-	ev, err = c.Wait("/ctl/persistence"+c.Id+path, rev)
+	ev, err = c.Wait("/ctl/persistence/"+c.Id+path, rev)
 	if !ev.IsSet() {
 		panic("set event was recorded as delete.")
 	}
@@ -46,7 +46,7 @@ func (c *Conn) Del(path string, rev int64) (err error) {
 		return
 	}
 
-	ev, err = c.Conn.Wait("/ctl/persistence"+c.Id+path, ev.Rev)
+	ev, err = c.Conn.Wait("/ctl/persistence/"+c.Id+path, ev.Rev)
 	if !ev.IsDel() {
 		panic("delete event was recorded as set.")
 	}
