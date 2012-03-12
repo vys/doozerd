@@ -148,7 +148,7 @@ func TestFix(t *testing.T) {
 		journal.WriteMutation(m)
 	}
 	journal.Close()
-	
+
 	fi, err := os.Stat(j)
 	if err != nil {
 		t.Fatal(err)
