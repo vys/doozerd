@@ -125,6 +125,53 @@ func TestNewCluster(t *testing.T) {
 	defer c.Close()
 }
 
+func TestFix(t *testing.T) {
+	f, err := ioutil.TempFile("", "j")
+	if err != nil {
+		t.Fatal(err)
+	}
+	j := f.Name()
+	f.Close()
+	defer os.Remove(j)
+
+	journal, err := persistence.NewJournal(j)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for k, v := range testData {
+		m := store.MustEncodeSet("/ken/"+strconv.Itoa(k), v, int64(k))
+		journal.WriteMutation(m)
+	}
+	for k, v := range testData {
+		m := store.MustEncodeSet("/ken/"+strconv.Itoa(k), v, int64(k))
+		journal.WriteMutation(m)
+	}
+	journal.Close()
+	
+	fi, err := os.Stat(j)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = os.Truncate(j, fi.Size()/2+1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	c := NewCluster(t, fmt.Sprintf("-j=%s", j), "-r", "-f")
+	defer c.Close()
+	for k, v := range testData {
+		v1, _, err := c.conn.Get("/ken/"+strconv.Itoa(k), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		v2 := string(v1)
+		if v != v2 {
+			t.Fatalf("restored data is not what is expected: %s != %s", v, v2)
+		}
+	}
+}
+
 func TestNotify(t *testing.T) {
 	c := NewCluster(t)
 	defer c.Close()
