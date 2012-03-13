@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ha/doozerd/persistence"
 	"os"
+	"path"
 )
 
 var progname = path.Base(os.Args[0])
@@ -29,7 +30,7 @@ func main() {
 	file := flag.Arg(0)
 	j, err := persistence.NewJournal(file)
 	if err != nil {
-		errln(err)
+		errln(err.Error())
 		os.Exit(2)
 	}
 	r := bufio.NewReader(os.Stdin)
@@ -48,7 +49,7 @@ func main() {
 		}
 		err = j.WriteMutation(string(line))
 		if err != nil {
-			errln(err)
+			errln(err.Error())
 			os.Exit(4)
 		}
 	}
