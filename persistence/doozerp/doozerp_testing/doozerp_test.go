@@ -253,11 +253,11 @@ func TestSave(t *testing.T) {
 	for k, v := range testData {
 		m, err := j.ReadMutation()
 		if err != nil {
-			t.Fatalf("bad journal file: %s", err.Error())
+			t.Fatalf("bad journal file: %v", err)
 		}
 		k1, v1, err := decode(m)
 		if err != nil {
-			t.Fatalf("bad journal file: %s", err.Error())
+			t.Fatalf("bad journal file: %v", err)
 		}
 		if k != k1 {
 			t.Fatalf("bad journal file: %s != %s", k1, k)
