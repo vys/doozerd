@@ -16,7 +16,7 @@ func Store() {
 	for m := range store {
 		err := journal.WriteMutation(m.mut)
 		if err != nil {
-			exit(err)
+			fatal(err)
 		}
 		notify <- m
 	}

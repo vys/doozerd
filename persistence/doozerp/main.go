@@ -33,26 +33,31 @@ var (
 )
 
 func usage() {
-	errln("usage: doozerp [options]")
+	fmt.Fprintln(os.Stderr, "usage: doozerp [options]")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
 
-func errln(err string) {
-	fmt.Fprintln(os.Stderr, "doozerp: "+err)
+func logf(format string, args ...interface{}) {
+	fmt.Fprint(os.Stderr, "doozerp: ")
+	fmt.Fprintf(os.Stderr, format+"\n", args...)
 }
 
-func exit(err error) {
-	errln(err.Error())
+func log(args ...interface{}) { logf("%v", args...) }
+
+func fatalf(format string, args ...interface{}) {
+	logf(format, args...)
 	os.Exit(2)
 }
+
+func fatal(args ...interface{}) { fatalf("%v", args...) }
 
 // dial connects to the server.
 func dial() {
 	var err error
 	conn, err = doozer.DialUri(*uri, *buri)
 	if err != nil {
-		exit(err)
+		fatal(err)
 	}
 	setid()
 }
@@ -65,7 +70,7 @@ func setid() {
 	body = []byte(fmt.Sprint(id))
 	_, err = conn.Set("/ctl/persistence/id", rev, body)
 	if err != nil {
-		exit(err)
+		fatal(err)
 	}
 }
 
@@ -76,7 +81,7 @@ func main() {
 	var err error
 	journal, err = persistence.NewJournal(*j)
 	if err != nil {
-		exit(err)
+		fatal(err)
 	}
 
 	dial()

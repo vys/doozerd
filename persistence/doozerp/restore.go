@@ -30,7 +30,7 @@ func restore() {
 		}
 		err = apply(m)
 		if err != nil {
-			exit(err)
+			fatal(err)
 		}
 	}
 }
@@ -38,14 +38,14 @@ func restore() {
 // badJournal deals with a broken journal.
 func badJournal(err error) {
 	if *f {
-		errln(err.Error())
+		log(err)
 		err = journal.Fsck()
 		if err != nil {
-			exit(errors.New("can't fix journal"))
+			fatal("can't fix journal")
 		}
-		errln("journal successfully fixed")
+		log("journal successfully fixed")
 	} else {
-		exit(err)
+		fatal(err)
 	}
 }
 

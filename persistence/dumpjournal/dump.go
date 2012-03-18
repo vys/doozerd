@@ -15,7 +15,7 @@ var (
 )
 
 func usage() {
-	errln("usage: " + progname + " [options] journal")
+	log("usage: " + progname + " [options] journal")
 	flag.PrintDefaults()
 	os.Exit(1)
 }

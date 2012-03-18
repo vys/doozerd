@@ -32,7 +32,7 @@ func monitor() {
 	for {
 		ev, err = conn.Wait("/**", rev)
 		if err != nil {
-			exit(err)
+			fatal(err)
 		}
 		rev = ev.Rev + 1
 		// BUG(aram): what are these, NOPs?
@@ -62,7 +62,7 @@ func Notify() {
 		ev := m.ev
 		rev, err := conn.Rev()
 		if err != nil {
-			exit(err)
+			fatal(err)
 		}
 		switch {
 		case ev.IsSet():
@@ -72,7 +72,7 @@ func Notify() {
 			err = conn.Del(prefix+ev.Path, rev)
 		}
 		if err != nil {
-			exit(err)
+			fatal(err)
 		}
 	}
 }
