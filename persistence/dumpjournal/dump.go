@@ -15,14 +15,17 @@ var (
 )
 
 func usage() {
-	log("usage: " + progname + " [options] journal")
+	fmt.Fprintf(os.Stderr, "usage: %s [options] journal", progname)
 	flag.PrintDefaults()
 	os.Exit(1)
 }
 
-func errln(s string) {
-	fmt.Fprintln(os.Stderr, progname+": "+s)
+func logf(format string, args ...interface{}) {
+	fmt.Fprint(os.Stderr, "doozerp: ")
+	fmt.Fprintf(os.Stderr, format+"\n", args...)
 }
+
+func log(args ...interface{}) { logf("%v", args...) }
 
 func main() {
 	flag.Usage = usage
@@ -42,14 +45,14 @@ func main() {
 			break
 		}
 		if err != nil {
-			errln("bad journal file: " + err.Error())
+			logf("bad journal file: %v", err)
 			if *f {
 				err = j.Fsck()
 				if err != nil {
-					errln("can't fix journal")
+					log("can't fix journal")
 					os.Exit(2)
 				}
-				errln("journal successfully fixed")
+				log("journal successfully fixed")
 				continue
 			} else {
 				return
