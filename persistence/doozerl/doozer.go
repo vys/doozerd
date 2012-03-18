@@ -27,8 +27,7 @@ func (c *Conn) Set(path string, oldRev int64, body []byte) (rev int64, err error
 		return
 	}
 
-	var ev doozer.Event
-	ev, err = c.Wait("/ctl/persistence/"+c.Id+path, rev)
+	ev, err := c.Wait("/ctl/persistence/"+c.Id+path, rev)
 	if !ev.IsSet() {
 		panic("set event was recorded as delete.")
 	}
@@ -40,8 +39,8 @@ func (c *Conn) Del(path string, rev int64) (err error) {
 	if err != nil {
 		return
 	}
-	var ev doozer.Event
-	ev, err = c.Conn.Wait(path, rev)
+
+	ev, err := c.Conn.Wait(path, rev)
 	if err != nil {
 		return
 	}
