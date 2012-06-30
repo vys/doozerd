@@ -1,9 +1,9 @@
 package member
 
 import (
-	"github.com/bmizerany/assert"
 	"github.com/4ad/doozerd/store"
 	"github.com/4ad/doozerd/test"
+	"github.com/bmizerany/assert"
 	"sort"
 	"testing"
 )

@@ -49,12 +49,12 @@ func decode(mut string) (k int, v string, err error) {
 }
 
 type Cluster struct {
-	conn		*doozerl.Conn
-	doozerd		*exec.Cmd
-	doozerp		*exec.Cmd
-	j		string
-	doozerdIsDead	bool
-	doozerpIsDead	bool
+	conn          *doozerl.Conn
+	doozerd       *exec.Cmd
+	doozerp       *exec.Cmd
+	j             string
+	doozerdIsDead bool
+	doozerpIsDead bool
 }
 
 func NewCluster(t *testing.T, doozerpArgs ...string) (c *Cluster) {

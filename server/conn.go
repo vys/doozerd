@@ -11,16 +11,16 @@ import (
 )
 
 type conn struct {
-	c		io.ReadWriter
-	wl		sync.Mutex	// write lock
-	addr		string
-	p		consensus.Proposer
-	st		*store.Store
-	canWrite	bool
-	rwsk		string
-	rosk		string
-	waccess		bool
-	raccess		bool
+	c        io.ReadWriter
+	wl       sync.Mutex // write lock
+	addr     string
+	p        consensus.Proposer
+	st       *store.Store
+	canWrite bool
+	rwsk     string
+	rosk     string
+	waccess  bool
+	raccess  bool
 }
 
 func (c *conn) serve() {

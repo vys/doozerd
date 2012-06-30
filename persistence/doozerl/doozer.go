@@ -8,7 +8,7 @@ import (
 
 type Conn struct {
 	*doozer.Conn
-	Id	string
+	Id string
 }
 
 func Dial(addr string) (*Conn, error) {

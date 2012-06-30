@@ -10,7 +10,7 @@ import (
 
 // from doozer/event.go.
 const (
-	_	= 1 << iota
+	_ = 1 << iota
 	_
 	set
 	del

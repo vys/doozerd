@@ -8,7 +8,7 @@ import (
 
 type FakeProposer struct {
 	*store.Store
-	seqn	int64
+	seqn int64
 }
 
 func (fp *FakeProposer) Propose(v []byte) store.Event {
