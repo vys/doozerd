@@ -44,9 +44,15 @@ var msg_Cmd_value = map[string]int32{
 	"LEARN":    7,
 }
 
+// newMsg_Cmd is deprecated. Use x.Enum() instead.
 func newMsg_Cmd(x msg_Cmd) *msg_Cmd {
 	e := msg_Cmd(x)
 	return &e
+}
+func (x msg_Cmd) Enum() *msg_Cmd {
+	p := new(msg_Cmd)
+	*p = x
+	return p
 }
 func (x msg_Cmd) String() string {
 	return proto.EnumName(msg_Cmd_name, int32(x))
@@ -58,11 +64,47 @@ type msg struct {
 	Crnd             *int64   `protobuf:"varint,3,opt,name=crnd" json:"crnd,omitempty"`
 	Vrnd             *int64   `protobuf:"varint,4,opt,name=vrnd" json:"vrnd,omitempty"`
 	Value            []byte   `protobuf:"bytes,5,opt,name=value" json:"value,omitempty"`
-	XXX_unrecognized []byte   `json:",omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
 }
 
 func (this *msg) Reset()         { *this = msg{} }
 func (this *msg) String() string { return proto.CompactTextString(this) }
+func (*msg) ProtoMessage()       {}
+
+func (this *msg) GetCmd() msg_Cmd {
+	if this != nil && this.Cmd != nil {
+		return *this.Cmd
+	}
+	return 0
+}
+
+func (this *msg) GetSeqn() int64 {
+	if this != nil && this.Seqn != nil {
+		return *this.Seqn
+	}
+	return 0
+}
+
+func (this *msg) GetCrnd() int64 {
+	if this != nil && this.Crnd != nil {
+		return *this.Crnd
+	}
+	return 0
+}
+
+func (this *msg) GetVrnd() int64 {
+	if this != nil && this.Vrnd != nil {
+		return *this.Vrnd
+	}
+	return 0
+}
+
+func (this *msg) GetValue() []byte {
+	if this != nil {
+		return this.Value
+	}
+	return nil
+}
 
 func init() {
 	proto.RegisterEnum("consensus.msg_Cmd", msg_Cmd_name, msg_Cmd_value)

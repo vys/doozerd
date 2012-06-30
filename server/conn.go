@@ -3,24 +3,24 @@ package server
 import (
 	"code.google.com/p/goprotobuf/proto"
 	"encoding/binary"
-	"github.com/ha/doozerd/consensus"
-	"github.com/ha/doozerd/store"
+	"github.com/4ad/doozerd/consensus"
+	"github.com/4ad/doozerd/store"
 	"io"
 	"log"
 	"sync"
 )
 
 type conn struct {
-	c        io.ReadWriter
-	wl       sync.Mutex // write lock
-	addr     string
-	p        consensus.Proposer
-	st       *store.Store
-	canWrite bool
-	rwsk     string
-	rosk     string
-	waccess  bool
-	raccess  bool
+	c		io.ReadWriter
+	wl		sync.Mutex	// write lock
+	addr		string
+	p		consensus.Proposer
+	st		*store.Store
+	canWrite	bool
+	rwsk		string
+	rosk		string
+	waccess		bool
+	raccess		bool
 }
 
 func (c *conn) serve() {
