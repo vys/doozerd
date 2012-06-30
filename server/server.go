@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/ha/doozerd/consensus"
-	"github.com/ha/doozerd/store"
+	"github.com/4ad/doozerd/consensus"
+	"github.com/4ad/doozerd/store"
 	"log"
 	"net"
 	"syscall"
@@ -38,16 +38,16 @@ func ListenAndServe(l net.Listener, canWrite chan bool, st *store.Store, p conse
 
 func serve(nc net.Conn, st *store.Store, p consensus.Proposer, w bool, rwsk, rosk string) {
 	c := &conn{
-		c:        nc,
-		addr:     nc.RemoteAddr().String(),
-		st:       st,
-		p:        p,
-		canWrite: w,
-		rwsk:     rwsk,
-		rosk:     rosk,
+		c:		nc,
+		addr:		nc.RemoteAddr().String(),
+		st:		st,
+		p:		p,
+		canWrite:	w,
+		rwsk:		rwsk,
+		rosk:		rosk,
 	}
 
-	c.grant("") // start as if the client supplied a blank password
+	c.grant("")	// start as if the client supplied a blank password
 	c.serve()
 	nc.Close()
 }
