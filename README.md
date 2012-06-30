@@ -19,9 +19,7 @@ other users and developers.
 
 ## Quick Start
 
-1. Download [doozerd](https://github.com/ha/doozerd/downloads)
-2. Unpack the archive and put `doozerd` in your `PATH`
-3. Repeat for [doozer](https://github.com/ha/doozer/downloads)
+1. Install doozerd: `go get github.com/4ad/doozerd`
 4. Start a doozerd with a WebView listening on `:8080`
 
         $ doozerd -w ":8080"
