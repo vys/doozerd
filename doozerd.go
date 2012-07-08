@@ -61,6 +61,16 @@ doozerd will not listen for for web connections.
 `)
 }
 
+func fixLazyAddress(addr string) string {
+	if len(addr) == 0 {
+		return addr
+	}
+	if addr[0] == ':' {
+		addr = "127.0.0.1" + addr
+	}
+	return addr
+}
+
 func main() {
 	*buri = os.Getenv("DOOZER_BOOT_URI")
 
@@ -77,6 +87,7 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
+	*laddr = fixLazyAddress(*laddr)
 
 	log.SetPrefix("DOOZER ")
 	log.SetFlags(log.Ldate | log.Lmicroseconds)
