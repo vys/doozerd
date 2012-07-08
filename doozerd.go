@@ -88,6 +88,10 @@ func main() {
 		os.Exit(1)
 	}
 	*laddr = fixLazyAddress(*laddr)
+	*waddr = fixLazyAddress(*waddr)
+	for i, addr := range aaddrs {
+		aaddrs[i] = fixLazyAddress(addr)
+	}
 
 	log.SetPrefix("DOOZER ")
 	log.SetFlags(log.Ldate | log.Lmicroseconds)
