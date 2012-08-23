@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/vys/assert"
-	"github.com/kr/pretty"
+	"github.com/vys/pretty"
 	"testing"
 )
 
