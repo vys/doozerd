@@ -19,7 +19,7 @@ other users and developers.
 
 ## Quick Start
 
-1. Install doozerd: `go get github.com/4ad/doozerd`
+1. Install doozerd: `go get github.com/vys/doozerd`
 4. Start a doozerd with a WebView listening on `:8080`
 
         $ doozerd -w ":8080"
@@ -99,9 +99,9 @@ Here are some example scenarios:
 
 ## What can I do with it?
 
-We have a detailed description of the [data model](https://github.com/ha/doozerd/blob/master/doc/data-model.md).
+We have a detailed description of the [data model](https://github.com/vys/doozerd/blob/master/doc/data-model.md).
 
-For ways to manipulate or read the data, see the [protocol spec](https://github.com/ha/doozerd/blob/master/doc/proto.md).
+For ways to manipulate or read the data, see the [protocol spec](https://github.com/vys/doozerd/blob/master/doc/proto.md).
 
 Try out doozer's fault-tolerance with some [fire
 drills][firedrill].

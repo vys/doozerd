@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/4ad/doozerd/store"
+	"github.com/vys/doozerd/store"
 	"io"
 	"sync/atomic"
 )

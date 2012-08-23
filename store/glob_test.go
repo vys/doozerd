@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/bmizerany/assert"
+	"github.com/vys/assert"
 	"testing"
 )
 

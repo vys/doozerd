@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"github.com/4ad/doozerd/persistence"
+	"github.com/vys/doozerd/persistence"
 	"os"
 	"path"
 )

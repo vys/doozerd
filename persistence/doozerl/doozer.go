@@ -1,9 +1,9 @@
-// package doozer provides a github.com/ha/doozer compatible API to
+// package doozer provides a github.com/vys/doozer compatible API to
 // interract with persitence clients.
 package doozerl
 
 import (
-	"github.com/4ad/doozer"
+	"github.com/vys/doozer"
 )
 
 type Conn struct {

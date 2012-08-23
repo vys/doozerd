@@ -1,7 +1,7 @@
 package gc
 
 import (
-	"github.com/4ad/doozerd/store"
+	"github.com/vys/doozerd/store"
 	"time"
 )
 

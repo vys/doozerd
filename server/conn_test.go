@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/bmizerany/assert"
+	"github.com/vys/assert"
 	"github.com/kr/pretty"
 	"testing"
 )

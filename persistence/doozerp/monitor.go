@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/4ad/doozer"
-	st "github.com/4ad/doozerd/store"
+	"github.com/vys/doozer"
+	st "github.com/vys/doozerd/store"
 	"regexp"
 )
 

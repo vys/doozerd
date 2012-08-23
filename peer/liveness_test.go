@@ -1,7 +1,7 @@
 package peer
 
 import (
-	"github.com/bmizerany/assert"
+	"github.com/vys/assert"
 	"net"
 	"testing"
 )
